@@ -1,3 +1,0 @@
-This file intends to test.
-
-I'm going to commit after modefication
