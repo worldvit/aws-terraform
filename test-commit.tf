@@ -1,1 +1,0 @@
-We have to commit a terraform file to github.commit
