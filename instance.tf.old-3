@@ -1,0 +1,18 @@
+// aws_key_pair 생성
+resource "aws_key_pair" "mykey" {
+  key_name   = "mykey"
+  public_key = file(var.PATH_TO_PUBLIC_KEY)
+}
+
+resource "aws_instance" "aws-webserver" {
+  ami           = var.AMIS[var.AWS_REGION]
+  instance_type = "t2.micro"
+  key_name      = aws_key_pair.mykey.key_name
+  provisioner "local-exec" {
+    command = "echo ${aws_instance.aws-webserver.private_ip} >> private_ips.txt"
+  }
+}
+
+output "public_ip" {
+  value = aws_instance.aws-webserver.public_ip
+}

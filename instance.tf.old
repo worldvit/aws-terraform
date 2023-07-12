@@ -1,0 +1,43 @@
+// aws_key_pair 생성
+resource "aws_key_pair" "mykey" {
+  key_name   = "mykey"
+  public_key = file(var.PATH_TO_PUBLIC_KEY)
+}
+
+
+// data block 생성
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners = [ "amazon" ]
+
+
+  filter {
+    name = "name"
+    values = [ "amzn2-ami-hvm-*" ]
+  }
+
+
+  filter {
+    name = "root-device-type"
+    values = [ "ebs" ]
+  }
+
+
+  filter {
+    name = "architecture"
+    values = [ "x86_64" ]
+  }
+
+
+  filter {
+    name = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+// instance 생성
+resource "aws_instance" "aws-webserver" {
+  ami = data.aws_ami.amazon_linux.id
+  instance_type = "t2.micro"
+  key_name = aws_key_pair.mykey.key_name
+}

@@ -1,0 +1,16 @@
+data "aws_vpc" "selected" {
+    filter {
+        name = "tag:Name"
+        values = ["Default VPC"]
+    }
+}
+
+resource "aws_subnet" "subnet10" {
+  vpc_id = data.aws_vpc.selected.id
+  cidr_block = "172.31.64.0/20"
+  map_public_ip_on_launch = true
+  availability_zone = "us-west-2a"
+  tags = {
+    Name = "Subnet64"
+  }
+}

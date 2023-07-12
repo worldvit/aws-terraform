@@ -1,0 +1,23 @@
+resource "aws_iam_group" "devops_group" {
+  name = "devops"
+}
+
+resource "aws_iam_user" "adam" {
+  name = "adam.god"
+}
+
+resource "aws_iam_group_membership" "devops" {
+  name = aws_iam_group.devops_group.name
+
+  users = [
+    aws_iam_user.adam.name
+  ]
+
+  group = aws_iam_group.devops_group.name
+}
+
+// Block added for creating S3 bucket
+// bucket name have to unique in the internet and only lowercase alphanumeric characters
+/*resource "aws_s3_bucket" "terraform_bucket" {
+  bucket = "kevinkwangjinkim-bucket-001"
+}*/
