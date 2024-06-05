@@ -5,10 +5,12 @@ data "aws_vpc" "selected" {
   }
 }
 
+/*
 # declare local variable
 locals {
   ports = [22,53,80,443,1521,3306,3389]
 }
+*/
 
 # creare a security group from local
 resource "aws_security_group" "management" {
@@ -17,13 +19,14 @@ resource "aws_security_group" "management" {
   vpc_id = data.aws_vpc.selected.id
 
   dynamic "ingress" {
-    for_each = local.ports
+    # for_each = local.ports
+    for_each = var.management-sg
     content {
-      description = "description ${ingress.key}"
-      from_port = ingress.value
-      to_port = ingress.value
-      protocol = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
+      description = ingress.value.description
+      from_port = ingress.value.port
+      to_port = ingress.value.port
+      protocol = ingress.value.protocol
+      cidr_blocks = ingress.value.cidr_blocks
     }
   }
   egress {
@@ -34,6 +37,7 @@ resource "aws_security_group" "management" {
   }
 }
 /*
+1차적으로 실습
 resource "aws_security_group" "management" {
   name="management-sg"
   description = "Allows SSH for admin"
