@@ -25,6 +25,30 @@ data "aws_ami" "amazon-linux" {
   }
 }
 
+data "aws_subnet" "subnet-0" {
+  filter {
+    name="tag:Name"
+    values = ["default-subnet-0"]
+  }
+}
+data "aws_subnet" "subnet-16" {
+  filter {
+    name="tag:Name"
+    values = ["default-subnet-16"]
+  }
+}
+data "aws_subnet" "subnet-32" {
+  filter {
+    name="tag:Name"
+    values = ["default-subnet-32"]
+  }
+}
+data "aws_subnet" "subnet-48" {
+  filter {
+    name="tag:Name"
+    values = ["default-subnet-48"]
+  }
+}
 # Create users
 /*
 resource "aws_iam_user" "adam" {
@@ -82,7 +106,28 @@ resource "aws_instance" "web" {
   ami = data.aws_ami.amazon-linux.id
   instance_type = var.inst-type
   key_name = aws_key_pair.mykey.key_name
-  vpc_security_group_ids = [ aws_security_group.management.id ]
+  vpc_security_group_ids = [ 
+    aws_security_group.management.id,
+    # aws_security_group.mysql.id
+    ]
+  subnet_id = data.aws_subnet.subnet-0.id
+
+  root_block_device {
+    volume_size = "20"
+    volume_type = "gp2"
+
+    tags = {
+      Name = "root-device"
+    }
+  }
+
+  user_data = <<-EOF
+    #!/bin/bash
+    sudo apt udpate
+    sudo apt install nginx -y
+    sudo systemctl enable --now nginx
+    echo "WEB Pages" | sudo tee /var/www/html/index.html
+  EOF
 
   tags = {
     Name = "web-${count.index}"
