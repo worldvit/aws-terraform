@@ -46,6 +46,7 @@ resource "aws_instance" "web-1" {
 #   ami = "ami-06068bc7800ac1a83"
   ami = var.ami
   instance_type = var.inst-type
+  vpc_security_group_ids = [ aws_security_group.management.id ]
 }
 
 resource "aws_instance" "web-2" {
@@ -53,6 +54,7 @@ resource "aws_instance" "web-2" {
   ami = var.ami
   instance_type = var.inst-type
   key_name = aws_key_pair.mykey.key_name
+  vpc_security_group_ids = [ aws_security_group.management.id ]
 }
 
 resource "aws_key_pair" "mykey" {
