@@ -72,3 +72,8 @@ variable "management-sg" {
     }
   }
 }
+
+variable "users" {
+  type = list(string)
+  default = [ "Adam","Eve","Set" ]
+}
