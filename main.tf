@@ -8,100 +8,19 @@ module "network" {
 
 module "instance" {
   source = "./instance"
-  sg_management_id = aws_security_group.management.id
-  subnet-0 = module.network.subnet-0
-  subnet-16 = module.network.subnet-16
-  subnet-32 = module.network.subnet-32
-  subnet-48 = module.network.subnet-48
+  vpc1 = module.network.vpc1
+  sg_management_id = module.securitygroup.sg_management_id
+  public-subnet-0 = module.network.public-subnet-0
+  public-subnet-16 = module.network.public-subnet-16
+  public-subnet-32 = module.network.public-subnet-32
+  public-subnet-48 = module.network.public-subnet-48
+  private-subnet-64 = module.network.private-subnet-64
+  private-subnet-80 = module.network.private-subnet-80
+  private-subnet-96 = module.network.private-subnet-96
+  private-subnet-112 = module.network.private-subnet-112
 }
 
-data "aws_vpc" "selected" {
-  filter {
-    name = "tag:Name"
-    values = ["default-vpc"]
-  }
-}
-
-/*
-# declare local variable
-locals {
-  ports = [22,53,80,443,1521,3306,3389]
-}
-*/
-
-# creare a security group from local
-resource "aws_security_group" "management" {
-  name="management-sg"
-  description = "Allows wellknown services for admin"
-  vpc_id = data.aws_vpc.selected.id
-
-  dynamic "ingress" {
-    # for_each = local.ports
-    for_each = var.management-sg
-    content {
-      description = ingress.value.description
-      from_port = ingress.value.port
-      to_port = ingress.value.port
-      protocol = ingress.value.protocol
-      cidr_blocks = ingress.value.cidr_blocks
-    }
-  }
-  egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-/*
-1차적으로 실습
-resource "aws_security_group" "management" {
-  name="management-sg"
-  description = "Allows SSH for admin"
-#   vpc_id = "vpc-0ed30604d04a09dc4"
-  vpc_id = data.aws_vpc.selected.id
-
-  ingress {
-    description = "SSH"
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
-    cidr_blocks = [ "0.0.0.0/0" ]
-  }
-  ingress {
-    description = "HTTP"
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
-    cidr_blocks = [ "0.0.0.0/0" ]
-  }
-  ingress {
-    description = "HTTPS"
-    from_port = 443
-    to_port = 443
-    protocol = "tcp"
-    cidr_blocks = [ "0.0.0.0/0" ]
-  }
-  ingress {
-    description = "ICMP"
-    from_port = -1
-    to_port = -1
-    protocol = "icmp"
-    cidr_blocks = [ "0.0.0.0/0" ]
-  }
-  egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = [ "0.0.0.0/0" ]
-  }
-
-  tags = {
-    Name = "management-sg"
-  }
-}
-*/
-
-output "sg_management_id" {
-  value = aws_security_group.management.id
+module "securitygroup" {
+  source = "./securitygroup"
+  vpc1 = module.network.vpc1
 }
