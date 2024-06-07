@@ -128,10 +128,10 @@ resource "aws_key_pair" "mykey" {
   public_key = file(var.PATH_TO_PUBLIC_KEY)
 }
 
-# output "public_ip_1" {
-#   value = aws_instance.web[*].public_ip
-# }
+output "public_ip_1" {
+  value = aws_instance.web[*].public_ip
+}
 
-# output "public_ip_2" {
-#   value = aws_instance.database[*].public_ip
-# }
+output "public_ip_2" {
+  value = aws_instance.database[*].public_ip
+}
