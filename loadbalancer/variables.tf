@@ -7,12 +7,12 @@ variable "inst-type" {
   default = "t2.micro"
 }
 
-variable "PATH_TO_PUBLIC_KEY" {
-  default = "keys/mykey.pub"
-}
+# variable "PATH_TO_PUBLIC_KEY" {
+#   default = "keys/mykey.pub"
+# }
 
-variable "PATH_TO_PRIVATE_KEY" {
-  default = "keys/mykey"
+variable "aws_key_pair" {
+  type = string
 }
 
 variable "sg_management_id" {

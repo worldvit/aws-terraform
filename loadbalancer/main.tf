@@ -72,7 +72,7 @@ resource "aws_launch_template" "web" {
   # image_id      = var.ami_id
   image_id      = "ami-0cf59ea572d0fc60f" #wordpress
   instance_type = "t2.micro"
-  key_name      = var.PATH_TO_PUBLIC_KEY
+  key_name      = var.aws_key_pair
 
   network_interfaces {
     associate_public_ip_address = true
