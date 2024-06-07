@@ -1,12 +1,7 @@
-# =============
 data "aws_acm_certificate" "cert" {
   domain   = "www.kdigital.shop"
   statuses = ["ISSUED"]
 }
-
-# data "aws_route53_zone" "main" {
-#   name = "kdigital-kt.shop"
-# }
 
 resource "aws_lb" "web" {
   name               = "lb-web"
@@ -106,18 +101,17 @@ resource "aws_autoscaling_group" "web" {
   }
 }
 
-resource "aws_route53_record" "delete_existing_www_cname" {
-#   zone_id = data.aws_route53_zone.main.zone_id
-  zone_id = var.aws_route53_zone
-  name    = "www.kdigital-kt.shop"
-  type    = "CNAME"
-  ttl     = 300
-  records = []
+# resource "aws_route53_record" "delete_existing_www_cname" {
+#   zone_id = var.aws_route53_zone
+#   name    = "www.kdigital-kt.shop"
+#   type    = "CNAME"
+#   ttl     = 300
+#   records = []
 
-  lifecycle {
-    prevent_destroy = false
-  }
-}
+#   lifecycle {
+#     prevent_destroy = false
+#   }
+# }
 
 resource "aws_route53_record" "www_cname" {
   zone_id = var.aws_route53_zone

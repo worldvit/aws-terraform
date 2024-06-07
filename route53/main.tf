@@ -67,7 +67,6 @@ resource "aws_route53_record" "www-cname-d" {
   records = ["k8s-n3.kdigital-kt.shop"]
 }
 
-
 output "aws_route53_zone" {
   value = aws_route53_zone.kdigital_shop
 }

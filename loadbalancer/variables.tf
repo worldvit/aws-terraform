@@ -2,15 +2,6 @@ variable "vpc1" {
   type = string
 }
 
-variable "inst-type" {
-  type = string
-  default = "t2.micro"
-}
-
-# variable "PATH_TO_PUBLIC_KEY" {
-#   default = "keys/mykey.pub"
-# }
-
 variable "aws_key_pair" {
   type = string
 }
