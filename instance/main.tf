@@ -48,7 +48,7 @@ data "aws_ami" "ubuntu-linux" {
 resource "aws_instance" "web" {
   # ami = "ami-06068bc7800ac1a83"
   # ami = var.ami
-  count = 3
+  count = 2
   ami = data.aws_ami.amazon-linux.id
   instance_type = var.inst-type
   key_name = aws_key_pair.mykey.key_name
@@ -82,7 +82,7 @@ resource "aws_instance" "web" {
 resource "aws_instance" "database" {
 #   ami = "ami-06068bc7800ac1a83"
   # ami = var.ami
-  count = 3
+  count = 2
   ami = data.aws_ami.ubuntu-linux.id
   instance_type = var.inst-type
   key_name = aws_key_pair.mykey.key_name
@@ -129,9 +129,14 @@ resource "aws_key_pair" "mykey" {
 }
 
 output "public_ip_1" {
-  value = aws_instance.web[*].public_ip
+  value = aws_instance.web[0].public_ip
 }
-
 output "public_ip_2" {
-  value = aws_instance.database[*].public_ip
+  value = aws_instance.web[1].public_ip
+}
+output "public_ip_3" {
+  value = aws_instance.database[0].public_ip
+}
+output "public_ip_4" {
+  value = aws_instance.database[1].public_ip
 }

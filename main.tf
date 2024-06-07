@@ -24,3 +24,11 @@ module "securitygroup" {
   source = "./securitygroup"
   vpc1 = module.network.vpc1
 }
+
+module "route53" {
+  source = "./route53"
+  public_ip_1 = module.instance.public_ip_1
+  public_ip_2 = module.instance.public_ip_2
+  public_ip_3 = module.instance.public_ip_3
+  public_ip_4 = module.instance.public_ip_4
+}
