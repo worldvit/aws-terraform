@@ -3,27 +3,15 @@ variable "region" {
   default = "us-west-2"
 }
 
-variable "ami" {
-  type=string
-  default = "ami-06068bc7800ac1a83"
-}
+# ==================================================
+# variable "ami" {
+#   type=string
+#   default = "ami-06068bc7800ac1a83"
+# }
 
-variable "inst-type" {
-  type = string
-  default = "t2.micro"
-}
-
-variable "PATH_TO_PUBLIC_KEY" {
-  default = "keys/mykey.pub"
-}
-
-variable "PATH_TO_PRIVATE_KEY" {
-  default = "keys/mykey"
-}
-
-variable "instance-username" {
-  default = "ubuntu"
-}
+# variable "instance-username" {
+#   default = "ubuntu"
+# }
 
 variable "management-sg" {
   type = map(object({
@@ -73,7 +61,7 @@ variable "management-sg" {
   }
 }
 
-variable "users" {
-  type = list(string)
-  default = [ "Adam","Eve","Set" ]
-}
+# variable "users" {
+#   type = list(string)
+#   default = [ "Adam","Eve","Set" ]
+# }
