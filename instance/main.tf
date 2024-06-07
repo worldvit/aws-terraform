@@ -53,7 +53,7 @@ resource "aws_instance" "web" {
   instance_type = var.inst-type
   key_name = aws_key_pair.mykey.key_name
   vpc_security_group_ids = [ var.sg_management_id ]
-  subnet_id = var.subnet-0
+  subnet_id = var.public-subnet-0
 
   root_block_device {
     volume_size = "20"
@@ -87,7 +87,7 @@ resource "aws_instance" "database" {
   instance_type = var.inst-type
   key_name = aws_key_pair.mykey.key_name
   vpc_security_group_ids =  [ var.sg_management_id ]
-  subnet_id = var.subnet-16
+  subnet_id = var.public-subnet-16
   associate_public_ip_address = true
 
   root_block_device {

@@ -1,3 +1,7 @@
+variable "vpc1" {
+  type = string
+}
+
 variable "inst-type" {
   type = string
   default = "t2.micro"
@@ -15,15 +19,27 @@ variable "sg_management_id" {
   type = string
 }
 
-variable "subnet-0" {
+variable "public-subnet-0" {
   type = string
 }
-variable "subnet-16" {
+variable "public-subnet-16" {
   type = string
 }
-variable "subnet-32" {
+variable "public-subnet-32" {
   type = string
 }
-variable "subnet-48" {
+variable "public-subnet-48" {
+  type = string
+}
+variable "private-subnet-64" {
+  type = string
+}
+variable "private-subnet-80" {
+  type = string
+}
+variable "private-subnet-96" {
+  type = string
+}
+variable "private-subnet-112" {
   type = string
 }

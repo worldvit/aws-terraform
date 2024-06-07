@@ -1,29 +1,3 @@
-# get a subnet from default vpc
-data "aws_subnet" "subnet-0" {
-  filter {
-    name="tag:Name"
-    values = ["default-subnet-0"]
-  }
-}
-data "aws_subnet" "subnet-16" {
-  filter {
-    name="tag:Name"
-    values = ["default-subnet-16"]
-  }
-}
-data "aws_subnet" "subnet-32" {
-  filter {
-    name="tag:Name"
-    values = ["default-subnet-32"]
-  }
-}
-data "aws_subnet" "subnet-48" {
-  filter {
-    name="tag:Name"
-    values = ["default-subnet-48"]
-  }
-}
-
 resource "aws_vpc" "vpc1" {
   cidr_block = "10.10.0.0/16"
   instance_tenancy = "default"
@@ -162,15 +136,38 @@ resource "aws_route_table_association" "vpc1-private-subnet-112" {
   route_table_id = aws_route_table.vpc1-private.id
 }
 
-output "subnet-0" {
-  value = data.aws_subnet.subnet-0.id
+output "vpc1" {
+  value = aws_vpc.vpc1.id
 }
-output "subnet-16" {
-  value = data.aws_subnet.subnet-16.id
+
+output "public-subnet-0" {
+  value = aws_subnet.vpc1-public-subnet-0.id
 }
-output "subnet-32" {
-  value = data.aws_subnet.subnet-32.id
+
+output "public-subnet-16" {
+  value = aws_subnet.vpc1-public-subnet-16.id
 }
-output "subnet-48" {
-  value = data.aws_subnet.subnet-48.id
+
+output "public-subnet-32" {
+  value = aws_subnet.vpc1-public-subnet-32.id
+}
+
+output "public-subnet-48" {
+  value = aws_subnet.vpc1-public-subnet-48.id
+}
+
+output "private-subnet-64" {
+  value = aws_subnet.vpc1-private-subnet-64.id
+}
+
+output "private-subnet-80" {
+  value = aws_subnet.vpc1-private-subnet-80.id
+}
+
+output "private-subnet-96" {
+  value = aws_subnet.vpc1-private-subnet-96.id
+}
+
+output "private-subnet-112" {
+  value = aws_subnet.vpc1-private-subnet-112.id
 }
