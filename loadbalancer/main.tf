@@ -8,7 +8,9 @@ resource "aws_lb" "web" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [var.sg_management_id]
-  subnets            = [var.public-subnet-0]
+  subnets            = [
+    var.public-subnet-0,
+    var.public-subnet-16]
 
   enable_deletion_protection = false
 
@@ -103,7 +105,7 @@ resource "aws_autoscaling_group" "web" {
 
 # resource "aws_route53_record" "delete_existing_www_cname" {
 #   zone_id = var.aws_route53_zone
-#   name    = "www.kdigital-kt.shop"
+#   name    = "www.kdigital.shop"
 #   type    = "CNAME"
 #   ttl     = 300
 #   records = []
@@ -115,7 +117,7 @@ resource "aws_autoscaling_group" "web" {
 
 resource "aws_route53_record" "www_cname" {
   zone_id = var.aws_route53_zone
-  name    = "www.kdigital-kt.shop"
+  name    = "www.kdigital.shop"
   type    = "CNAME"
   ttl     = 300
   records = [aws_lb.web.dns_name]

@@ -9,3 +9,7 @@ output "database_public_ip" {
 output "web_public_ip" {
   value = module.instance.public_ip_2
 }
+
+output "aws_route53_zone" {
+  value = module.route53.aws_route53_zone
+}

@@ -111,16 +111,6 @@ resource "aws_instance" "database" {
     Name = "database-${count.index}"
   }
 }
-/*
-resource "aws_instance" "web-2" {
-  # ami = "ami-06068bc7800ac1a83"
-  # ami = var.ami
-  ami = data.aws_ami.amazon-linux.id
-  instance_type = var.inst-type
-  key_name = aws_key_pair.mykey.key_name
-  vpc_security_group_ids = [ aws_security_group.management.id ]
-}
-*/
 
 # Create public key
 resource "aws_key_pair" "mykey" {

@@ -1,12 +1,26 @@
+data "aws_availability_zones" "zones" {
+  state = "available"
+}
+
 resource "aws_vpc" "vpc1" {
-  cidr_block = "10.10.0.0/16"
+  cidr_block = var.vpc-cidr-block
   instance_tenancy = "default"
   enable_dns_support = "true"
   enable_dns_hostnames = "true"
-  tags = { Name = "vpc-1"}
+  tags = { Name = "${var.project}-vpc1"}
 }
 
 # create public subnets
+resource "aws_subnet" "vpc1-public-subnets" {
+  count = 4
+  vpc_id = aws_vpc.vpc1.id
+  availability_zone = element(data.aws_availability_zones.zones.names,count.index)
+  cidr_block = cidrsubnet(var.vpc-cidr-block,8,count.index+10)
+  map_public_ip_on_launch = "true"
+  tags = { Name = "public-subnet-${count.index+1}" }
+
+}
+/*
 resource "aws_subnet" "vpc1-public-subnet-0" {
   vpc_id = aws_vpc.vpc1.id
   cidr_block = "10.10.0.0/20"
@@ -38,8 +52,18 @@ resource "aws_subnet" "vpc1-public-subnet-48" {
   availability_zone = "us-west-2d"
   tags = { Name = "public-subnet-48"}
 }
-
+*/
 # create private subnets
+resource "aws_subnet" "vpc1-private-subnets" {
+  count = 4
+  vpc_id = aws_vpc.vpc1.id
+  availability_zone = element(data.aws_availability_zones.zones.names,count.index)
+  cidr_block = cidrsubnet(var.vpc-cidr-block,8,count.index+100)
+  map_public_ip_on_launch = "true"
+  tags = { Name = "private-subnet-${count.index+1}" }
+
+}
+/*
 resource "aws_subnet" "vpc1-private-subnet-64" {
   vpc_id = aws_vpc.vpc1.id
   cidr_block = "10.10.64.0/20"
@@ -67,7 +91,7 @@ resource "aws_subnet" "vpc1-private-subnet-112" {
   availability_zone = "us-west-2d"
   tags = { Name = "private-subnet-112"}
 }
-
+*/
 # create Internet Gateway
 resource "aws_internet_gateway" "vpc1-igw" {
   vpc_id = aws_vpc.vpc1.id
@@ -86,22 +110,22 @@ resource "aws_route_table" "vpc1-public" {
 
 # route associateions public
 resource "aws_route_table_association" "vpc1-public-subnet-0" {
-  subnet_id = aws_subnet.vpc1-public-subnet-0.id
+  subnet_id = aws_subnet.vpc1-public-subnets[0].id
   route_table_id = aws_route_table.vpc1-public.id
 }
 
 resource "aws_route_table_association" "vpc1-public-subnet-16" {
-  subnet_id = aws_subnet.vpc1-public-subnet-16.id
+  subnet_id = aws_subnet.vpc1-public-subnets[1].id
   route_table_id = aws_route_table.vpc1-public.id
 }
 
 resource "aws_route_table_association" "vpc1-public-subnet-32" {
-  subnet_id = aws_subnet.vpc1-public-subnet-32.id
+  subnet_id = aws_subnet.vpc1-public-subnets[2].id
   route_table_id = aws_route_table.vpc1-public.id
 }
 
 resource "aws_route_table_association" "vpc1-public-subnet-48" {
-  subnet_id = aws_subnet.vpc1-public-subnet-48.id
+  subnet_id = aws_subnet.vpc1-public-subnets[3].id
   route_table_id = aws_route_table.vpc1-public.id
 }
 
@@ -117,22 +141,22 @@ resource "aws_route_table" "vpc1-private" {
 
 # route associateions private
 resource "aws_route_table_association" "vpc1-private-subnet-64" {
-  subnet_id = aws_subnet.vpc1-private-subnet-64.id
+  subnet_id = aws_subnet.vpc1-private-subnets[0].id
   route_table_id = aws_route_table.vpc1-private.id
 }
 
 resource "aws_route_table_association" "vpc1-private-subnet-80" {
-  subnet_id = aws_subnet.vpc1-private-subnet-80.id
+  subnet_id = aws_subnet.vpc1-private-subnets[1].id
   route_table_id = aws_route_table.vpc1-private.id
 }
 
 resource "aws_route_table_association" "vpc1-private-subnet-96" {
-  subnet_id = aws_subnet.vpc1-private-subnet-96.id
+  subnet_id = aws_subnet.vpc1-private-subnets[2].id
   route_table_id = aws_route_table.vpc1-private.id
 }
 
 resource "aws_route_table_association" "vpc1-private-subnet-112" {
-  subnet_id = aws_subnet.vpc1-private-subnet-112.id
+  subnet_id = aws_subnet.vpc1-private-subnets[3].id
   route_table_id = aws_route_table.vpc1-private.id
 }
 
@@ -141,33 +165,33 @@ output "vpc1" {
 }
 
 output "public-subnet-0" {
-  value = aws_subnet.vpc1-public-subnet-0.id
+  value = aws_subnet.vpc1-public-subnets[0].id
 }
 
 output "public-subnet-16" {
-  value = aws_subnet.vpc1-public-subnet-16.id
+  value = aws_subnet.vpc1-public-subnets[1].id
 }
 
 output "public-subnet-32" {
-  value = aws_subnet.vpc1-public-subnet-32.id
+  value = aws_subnet.vpc1-public-subnets[2].id
 }
 
 output "public-subnet-48" {
-  value = aws_subnet.vpc1-public-subnet-48.id
+  value = aws_subnet.vpc1-public-subnets[3].id
 }
 
 output "private-subnet-64" {
-  value = aws_subnet.vpc1-private-subnet-64.id
+  value = aws_subnet.vpc1-private-subnets[0].id
 }
 
 output "private-subnet-80" {
-  value = aws_subnet.vpc1-private-subnet-80.id
+  value = aws_subnet.vpc1-private-subnets[1].id
 }
 
 output "private-subnet-96" {
-  value = aws_subnet.vpc1-private-subnet-96.id
+  value = aws_subnet.vpc1-private-subnets[2].id
 }
 
 output "private-subnet-112" {
-  value = aws_subnet.vpc1-private-subnet-112.id
+  value = aws_subnet.vpc1-private-subnets[3].id
 }

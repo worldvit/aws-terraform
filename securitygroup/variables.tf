@@ -35,6 +35,12 @@ variable "management-sg" {
       protocol = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     }
+    "2049" = {
+      description = "Allowd NFS for admin"
+      port = 2049
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
     "3389" = {
       description = "Allowd RDP for admin"
       port = 3389
@@ -44,6 +50,12 @@ variable "management-sg" {
     "53" = {
       description = "Allowd domain for everyone"
       port = 53
+      protocol = "udp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+    "500" = {
+      description = "Allowd IKE for everyone"
+      port = 500
       protocol = "udp"
       cidr_blocks = ["0.0.0.0/0"]
     }

@@ -37,7 +37,7 @@ module "loadbalancer" {
   source = "./loadbalancer"
   vpc1 = module.network.vpc1
   aws_key_pair = module.instance.aws_key_pair
-  aws_route53_zone = module.route53.aws_route53_zone.id
+  aws_route53_zone = module.route53.aws_route53_zone
   sg_management_id = module.securitygroup.sg_management_id
   public-subnet-0 = module.network.public-subnet-0
   public-subnet-16 = module.network.public-subnet-16
