@@ -49,3 +49,18 @@ module "loadbalancer" {
   private-subnet-96 = module.network.private-subnet-96
   private-subnet-112 = module.network.private-subnet-112
 }
+
+module "cloudwatch" {
+  source = "./cloudwatch"
+  aws_lb_web_id = module.loadbalancer.aws_lb_web_id
+  asg_name = module.loadbalancer.asg_name
+  cpu_high = module.loadbalancer.cpu_high
+  myasg_sns_topic =module.sns.myasg_sns_topic
+}
+
+module "sns" {
+  source = "./sns"
+  asg_name = module.loadbalancer.asg_name
+  aws_lb_web_id = module.loadbalancer.aws_lb_web_id
+  cpu_high = module.loadbalancer.cpu_high
+}
