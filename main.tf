@@ -39,6 +39,7 @@ module "loadbalancer" {
   aws_key_pair = module.instance.aws_key_pair
   aws_route53_zone = module.route53.aws_route53_zone
   sg_management_id = module.securitygroup.sg_management_id
+  vpc1-private-subnets = module.network.vpc1-private-subnets[*].id
   public-subnet-0 = module.network.public-subnet-0
   public-subnet-16 = module.network.public-subnet-16
   public-subnet-32 = module.network.public-subnet-32

@@ -38,3 +38,7 @@ variable "private-subnet-112" {
 variable "aws_route53_zone" {
   type = string
 }
+
+variable "vpc1-private-subnets" {
+  # type = list(string)
+}

@@ -85,11 +85,12 @@ resource "aws_launch_template" "web" {
   }
 }
 
+#  ===============start autoscaling===============================
 resource "aws_autoscaling_group" "web" {
   desired_capacity     = 2
   max_size             = 4
   min_size             = 1
-  vpc_zone_identifier  = [var.private-subnet-64]
+  vpc_zone_identifier  = [var.private-subnet-64,var.private-subnet-80]
   launch_template {
     id      = aws_launch_template.web.id
     version = "$Latest"
@@ -103,6 +104,63 @@ resource "aws_autoscaling_group" "web" {
   }
 }
 
+resource "aws_autoscaling_policy" "scale_up" {
+  name                   = "scale_up"
+  scaling_adjustment     = 1
+  # When this policy is triggered, it will add 1 server to the group.
+  adjustment_type        = "ChangeInCapacity"
+  # This tells the system to change the number of servers 
+  # by the amount specified in scaling_adjustment.
+  cooldown               = 300
+  # After the policy is triggered, it will wait 300 seconds (5 minutes) 
+  # before it can be triggered again. 
+  # This prevents the system from scaling too quickly.
+  autoscaling_group_name = aws_autoscaling_group.web.name
+}
+
+resource "aws_autoscaling_policy" "scale_down" {
+  name                   = "scale_down"
+  scaling_adjustment     = -1
+  # When this policy is triggered, it will remove 1 server from the group.
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 300
+  autoscaling_group_name = aws_autoscaling_group.web.name
+}
+
+resource "aws_cloudwatch_metric_alarm" "cpu_high" {
+  alarm_name          = "cpu_high"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 2
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 70
+
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.web.name
+  }
+
+  alarm_actions = [aws_autoscaling_policy.scale_up.arn]
+}
+
+resource "aws_cloudwatch_metric_alarm" "cpu_low" {
+  alarm_name          = "cpu_low"
+  comparison_operator = "LessThanOrEqualToThreshold"
+  evaluation_periods  = 2
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 30
+
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.web.name
+  }
+
+  alarm_actions = [aws_autoscaling_policy.scale_down.arn]
+}
+# ===============end autoscaling===============================
 # resource "aws_route53_record" "delete_existing_www_cname" {
 #   zone_id = var.aws_route53_zone
 #   name    = "www.kdigital.shop"
